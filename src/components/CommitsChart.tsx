@@ -22,8 +22,8 @@ type CommitData = {
 
 const getLast30Days = (): string[] => {
   const today = new Date();
-  return Array.from({ length: 30 }, (_, i) =>
-    format(subDays(today, 29 - i), "yyyy-MM-dd")
+  return Array.from({ length: 50 }, (_, i) =>
+    format(subDays(today, 50 - i), "yyyy-MM-dd")
   );
 };
 
@@ -34,7 +34,7 @@ const CommitsChart: React.FC<Props> = ({ username }) => {
   useEffect(() => {
     const fetchCommits = async () => {
       setLoading(true);
-      const since = subDays(new Date(), 30).toISOString();
+      const since = subDays(new Date(), 50).toISOString();
       const dateMap: Record<string, number> = {};
       getLast30Days().forEach((d) => (dateMap[d] = 0));
 
@@ -43,7 +43,7 @@ const CommitsChart: React.FC<Props> = ({ username }) => {
           `https://api.github.com/users/${username}/repos?per_page=100`
         );
         const repos = await reposRes.json();
-        const topRepos = repos.slice(0, 5);
+        const topRepos = repos.slice(0, 10);
 
         for (const repo of topRepos) {
           const commitsRes = await fetch(
@@ -82,7 +82,7 @@ const CommitsChart: React.FC<Props> = ({ username }) => {
     <Card>
       <CardContent className="p-4">
         <h2 className="text-xl font-semibold mb-4">
-          Daily Commits (Last 30 Days)
+          Daily Commits (Last 50 Days)
         </h2>
         {loading ? (
           <p>Loading...</p>
